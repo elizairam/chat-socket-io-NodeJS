@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Websockets</title>
+</head>
+<body>
+    <input type="text" id="name" />
+    <br>
+    <br>
+    <textarea rows="5" cols="100" id="message" 
+    onkeypress="sendMessage()"></textarea>
+    <br>
+   
+
+    <div id="messages" style="white-space: pre-line;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script>
+  var socket = io('http://localhost:3000');
+    socket.on('server_hello', receiveMessage)
+
+  function sendMessage(){
+      if(event.keyCode === 13 && !event.shiftKey){
+          var name = document.getElementById('name').value; 
+          var text = document.getElementById('message').value;
+        
+        document.getElementById('message').value = "";
+        socket.emit('client_message', {name, text});
+        
+      }
+    }
+
+    function receiveMessage(dado) {
+        var element = document.getElementById('messages');
+        element.innerHTML += 
+        `<div>
+       <b>${dado.name} diz: </b> ${dado.text}
+        </div>`    
+    }
+
+</script>
+</body>
+</html>
